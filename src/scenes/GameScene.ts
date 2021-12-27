@@ -1,17 +1,18 @@
 import Phaser from 'phaser';
+import Player, { PLAYER_KEY } from '../gameobjects/Player';
 
 const LAND_KEY = 'land';
-const PLAYER_KEY = 'player';
 const STAR_KEY = 'star';
 
-const PLAYER_SPEED = 100;
-const SPAWN_INTERVAL = 1000;
+const SPAWN_INTERVAL = 10000;
 
 export default class GameScene extends Phaser.Scene {
-  cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
-  floor: Phaser.GameObjects.Group | undefined;
-  player: Phaser.GameObjects.Image | undefined;
-  lastSpawnTime: number | undefined;
+  cash: number = 0;
+  cashLabel: Phaser.GameObjects.Text;
+  cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  floor: Phaser.GameObjects.Group;
+  lastSpawnTime: number;
+  player: Player;
 
   constructor() {
     super('game-scene');
@@ -24,9 +25,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.cashLabel = this.add.text(600, 16, `Cash: ${this.cash}`);
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.floor = this.createFloor();
-    this.player = this.createPlayer();
+    this.player = new Player(this);
   }
 
   createFloor() {
@@ -46,18 +48,9 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
-  createPlayer() {
-    const player = this.add.image(32, 32, 'player');
-    this.physics.add.existing(player);
-
-    // @ts-ignore
-    player.body.setCollideWorldBounds(true);
-    return player;
-  }
-
   update() {
     this.spawnStar();
-    this.updatePlayerPosition();
+    this.player.updatePosition(this.cursorKeys);
   }
 
   spawnStar() {
@@ -69,26 +62,27 @@ export default class GameScene extends Phaser.Scene {
     const shouldSpawn = this.time.now - this.lastSpawnTime > SPAWN_INTERVAL;
     if (shouldSpawn) {
       this.lastSpawnTime = this.time.now;
-      this.add.image(
+      const star = this.physics.add.sprite(
         Phaser.Math.Between(12, 788),
         Phaser.Math.Between(12, 588),
         'star',
       );
+
+      this.physics.add.overlap(
+        this.player.gameObject,
+        star,
+        this.collectStar,
+        undefined,
+        this,
+      );
     }
   }
 
-  updatePlayerPosition() {
-    const dx =
-      (this.cursorKeys?.left.isDown && -PLAYER_SPEED) ||
-      (this.cursorKeys?.right.isDown && PLAYER_SPEED) ||
-      0;
+  collectStar(player, star) {
+    star.destroy();
+    // todo: star.disableBody(true, true);
 
-    const dy =
-      (this.cursorKeys?.up.isDown && -PLAYER_SPEED) ||
-      (this.cursorKeys?.down.isDown && PLAYER_SPEED) ||
-      0;
-
-    // @ts-ignore
-    this.player?.body.setVelocity(dx, dy);
+    this.cash += 10;
+    this.cashLabel.setText(`Cash: ${this.cash}`);
   }
 }

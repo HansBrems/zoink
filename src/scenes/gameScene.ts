@@ -11,6 +11,9 @@ export default class GameScene extends Phaser.Scene {
   cashLabel: Phaser.GameObjects.Text;
   cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
   floor: Phaser.GameObjects.Group;
+  inventoryKey: Phaser.Input.Keyboard.Key;
+  inventoryScene: Phaser.Scenes.ScenePlugin;
+  isInventoryVisible: boolean = false;
   lastSpawnTime: number;
   player: Player;
 
@@ -29,6 +32,9 @@ export default class GameScene extends Phaser.Scene {
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.floor = this.createFloor();
     this.player = new Player(this);
+
+    //this.toggleInventory();
+    this.input.keyboard.on('keydown-I', _ => this.toggleInventory());
   }
 
   createFloor() {
@@ -80,5 +86,16 @@ export default class GameScene extends Phaser.Scene {
 
     this.cash += 10;
     this.cashLabel.setText(`Cash: ${this.cash}`);
+  }
+
+  toggleInventory() {
+    this.isInventoryVisible = !this.isInventoryVisible;
+
+    if (this.isInventoryVisible) {
+      this.scene.run('inventory-scene');
+    } else {
+      this.scene.setVisible(false, 'inventory-scene');
+      // or: this.scene.sleep('inventory-scene');
+    }
   }
 }

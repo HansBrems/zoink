@@ -10,7 +10,7 @@ export default class Player {
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
-    this.player = this.createPlayer(scene);
+    this.player = this.createPlayer();
   }
 
   get gameObject() {
@@ -32,9 +32,9 @@ export default class Player {
     this.player.body.setVelocity(dx, dy);
   }
 
-  private createPlayer(scene: Phaser.Scene): Phaser.GameObjects.Sprite {
-    const player = scene.add.sprite(32, 32, 'player');
-    scene.physics.add.existing(player);
+  private createPlayer(): Phaser.GameObjects.Sprite {
+    const player = this.scene.add.sprite(32, 32, 'player');
+    this.scene.physics.add.existing(player);
 
     // @ts-ignore
     player.body.setCollideWorldBounds(true);

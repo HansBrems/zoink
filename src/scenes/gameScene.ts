@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import Player, { PLAYER_KEY } from '../components/player';
+import Star, { STAR_KEY } from '../components/star';
 
 const LAND_KEY = 'land';
-const STAR_KEY = 'star';
 
 const SPAWN_INTERVAL = 10000;
 
@@ -62,15 +62,11 @@ export default class GameScene extends Phaser.Scene {
     const shouldSpawn = this.time.now - this.lastSpawnTime > SPAWN_INTERVAL;
     if (shouldSpawn) {
       this.lastSpawnTime = this.time.now;
-      const star = this.physics.add.sprite(
-        Phaser.Math.Between(12, 788),
-        Phaser.Math.Between(12, 588),
-        'star',
-      );
+      const star = new Star(this);
 
       this.physics.add.overlap(
         this.player.gameObject,
-        star,
+        star.gameObject,
         this.collectStar,
         undefined,
         this,

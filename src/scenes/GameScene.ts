@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Player, { PLAYER_KEY } from '../components/Player';
+import Player, { PLAYER_KEY } from '../components/player';
 
 const LAND_KEY = 'land';
 const STAR_KEY = 'star';

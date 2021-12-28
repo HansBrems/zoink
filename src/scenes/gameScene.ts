@@ -1,10 +1,12 @@
 import Phaser from 'phaser';
 import Player, { PLAYER_KEY } from '../components/player';
-import Star, { STAR_KEY } from '../components/star';
+import Star, { STAR_KEY, SPAWN_SOUND } from '../components/star';
 
 const LAND_KEY = 'land';
 
-const SPAWN_INTERVAL = 10000;
+const PICKUP_KEY = 'pickup';
+
+const SPAWN_INTERVAL = 5000;
 
 export default class GameScene extends Phaser.Scene {
   cash: number = 0;
@@ -22,6 +24,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.audio(SPAWN_SOUND, [
+      'assets/sounds/Rise01.ogg',
+      'assets/sounds/Rise01.m4a',
+    ]);
+    this.load.audio(PICKUP_KEY, [
+      'assets/sounds/Rise02.ogg',
+      'assets/sounds/Rise02.m4a',
+    ]);
+
     this.load.image(LAND_KEY, 'assets/land.png');
     this.load.image(PLAYER_KEY, 'assets/player.png');
     this.load.image(STAR_KEY, 'assets/star.png');
@@ -68,19 +79,14 @@ export default class GameScene extends Phaser.Scene {
     const shouldSpawn = this.time.now - this.lastSpawnTime > SPAWN_INTERVAL;
     if (shouldSpawn) {
       this.lastSpawnTime = this.time.now;
-      const star = new Star(this);
 
-      this.physics.add.overlap(
-        this.player.gameObject,
-        star.gameObject,
-        this.collectStar,
-        undefined,
-        this,
-      );
+      const star = new Star(this);
+      star.addOverlap(this.player.gameObject, this.collectStar);
     }
   }
 
   collectStar(player, star) {
+    this.sound.play(PICKUP_KEY);
     star.destroy();
     // todo: star.disableBody(true, true);
 

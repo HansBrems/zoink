@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
 import Inventory from '../components/inventory';
+import * as SceneKeys from './sceneKeys';
 
 export default class InventoryScene extends Phaser.Scene {
   inventory: Inventory;
 
   constructor() {
-    super('inventory-scene');
+    super(SceneKeys.InventoryScene);
   }
 
   create() {

@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Player, { PLAYER_KEY } from '../components/player';
 import Star, { STAR_KEY, SPAWN_SOUND } from '../components/star';
+import * as SceneKeys from './sceneKeys';
 
 const LAND_KEY = 'land';
 
@@ -20,7 +21,7 @@ export default class GameScene extends Phaser.Scene {
   player: Player;
 
   constructor() {
-    super('game-scene');
+    super(SceneKeys.GameScene);
   }
 
   preload() {
@@ -39,6 +40,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.scene.stop(SceneKeys.BootScene);
+
     this.cashLabel = this.add.text(600, 16, `Cash: ${this.cash}`);
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.floor = this.createFloor();
@@ -98,10 +101,10 @@ export default class GameScene extends Phaser.Scene {
     this.isInventoryVisible = !this.isInventoryVisible;
 
     if (this.isInventoryVisible) {
-      this.scene.run('inventory-scene');
+      this.scene.run(SceneKeys.InventoryScene);
     } else {
-      this.scene.setVisible(false, 'inventory-scene');
-      // or: this.scene.sleep('inventory-scene');
+      this.scene.setVisible(false, SceneKeys.InventoryScene);
+      // or: this.scene.sleep(SceneKeys.InventoryScene);
     }
   }
 }

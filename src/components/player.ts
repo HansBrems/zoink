@@ -1,14 +1,14 @@
 import Phaser from 'phaser';
 
-export const PLAYER_KEY = 'player';
-
 const PLAYER_SPEED = 200;
 
 export default class Player {
+  key: string;
   player: Phaser.GameObjects.Sprite;
   scene: Phaser.Scene;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, key: string) {
+    this.key = key;
     this.scene = scene;
     this.player = this.createPlayer();
   }
@@ -33,7 +33,7 @@ export default class Player {
   }
 
   private createPlayer(): Phaser.GameObjects.Sprite {
-    const player = this.scene.add.sprite(32, 32, 'player');
+    const player = this.scene.add.sprite(32, 32, this.key);
     this.scene.physics.add.existing(player);
 
     // @ts-ignore

@@ -1,13 +1,14 @@
 import Phaser from 'phaser';
 
-export const STAR_KEY = 'star';
 export const SPAWN_SOUND = 'spawn-sound';
 
 export default class Star {
+  key: string;
   scene: Phaser.Scene;
   star: Phaser.GameObjects.Sprite;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, key: string) {
+    this.key = key;
     this.scene = scene;
     this.star = this.createStar();
   }
@@ -30,7 +31,7 @@ export default class Star {
     const star = this.scene.physics.add.sprite(
       Phaser.Math.Between(12, 788),
       Phaser.Math.Between(12, 588),
-      STAR_KEY,
+      this.key,
     );
 
     star.alpha = 0;

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import * as AudioKeys from '../audioKeys';
+import * as AudioKeys from '../constants/audioKeys';
 
 export default class Star {
   key: string;

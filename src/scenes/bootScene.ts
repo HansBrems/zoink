@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import * as AudioKeys from '../audioKeys';
-import * as SceneKeys from './sceneKeys';
-import * as SpriteKeys from '../spriteKeys';
+import * as AudioKeys from '../constants/audioKeys';
+import * as SceneKeys from '../constants/sceneKeys';
+import * as SpriteKeys from '../constants/spriteKeys';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {

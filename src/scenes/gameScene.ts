@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import Player from '../components/player';
 import Star from '../components/star';
-import * as AudioKeys from '../audioKeys';
-import * as SceneKeys from './sceneKeys';
-import * as SpriteKeys from '../spriteKeys';
+import * as AudioKeys from '../constants/audioKeys';
+import * as SceneKeys from '../constants/sceneKeys';
+import * as SpriteKeys from '../constants/spriteKeys';
 
 const SPAWN_INTERVAL = 10000;
 

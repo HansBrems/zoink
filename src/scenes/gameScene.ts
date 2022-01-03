@@ -1,9 +1,8 @@
 import Phaser from 'phaser';
 import Player from '../components/player';
 import Star, { SPAWN_SOUND } from '../components/star';
-import * as AssetKeys from '../assetKeys';
 import * as SceneKeys from './sceneKeys';
-const LAND_KEY = 'land';
+import * as SpriteKeys from '../spriteKeys';
 
 const PICKUP_KEY = 'pickup';
 
@@ -41,7 +40,7 @@ export default class GameScene extends Phaser.Scene {
     this.cashLabel = this.add.text(600, 16, `Cash: ${this.cash}`);
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.floor = this.createFloor();
-    this.player = new Player(this, AssetKeys.PLAYER_SPRITE);
+    this.player = new Player(this, SpriteKeys.PLAYER);
 
     //this.toggleInventory();
     this.input.keyboard.on('keydown-I', _ => this.toggleInventory());
@@ -51,7 +50,7 @@ export default class GameScene extends Phaser.Scene {
     return this.add.group({
       classType: Phaser.GameObjects.Image,
       // @ts-ignore
-      key: AssetKeys.LAND_SPRITE,
+      key: SpriteKeys.LAND,
       quantity: 16,
       gridAlign: {
         width: 4,
@@ -79,7 +78,7 @@ export default class GameScene extends Phaser.Scene {
     if (shouldSpawn) {
       this.lastSpawnTime = this.time.now;
 
-      const star = new Star(this, AssetKeys.STAR_SPRITE);
+      const star = new Star(this, SpriteKeys.STAR);
       star.addOverlap(this.player.gameObject, this.collectStar);
     }
   }

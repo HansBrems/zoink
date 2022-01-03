@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import * as AssetKeys from '../assetKeys';
 import * as SceneKeys from './sceneKeys';
+import * as SpriteKeys from '../spriteKeys';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -8,9 +8,9 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image(AssetKeys.LAND_SPRITE, 'assets/land.png');
-    this.load.image(AssetKeys.PLAYER_SPRITE, 'assets/player.png');
-    this.load.image(AssetKeys.STAR_SPRITE, 'assets/star.png');
+    this.load.image(SpriteKeys.LAND, 'assets/land.png');
+    this.load.image(SpriteKeys.PLAYER, 'assets/player.png');
+    this.load.image(SpriteKeys.STAR, 'assets/star.png');
   }
 
   create() {

@@ -1,12 +1,11 @@
 import Phaser from 'phaser';
 import Player from '../components/player';
-import Star, { SPAWN_SOUND } from '../components/star';
+import Star from '../components/star';
+import * as AudioKeys from '../audioKeys';
 import * as SceneKeys from './sceneKeys';
 import * as SpriteKeys from '../spriteKeys';
 
-const PICKUP_KEY = 'pickup';
-
-const SPAWN_INTERVAL = 5000;
+const SPAWN_INTERVAL = 10000;
 
 export default class GameScene extends Phaser.Scene {
   cash: number = 0;
@@ -21,17 +20,6 @@ export default class GameScene extends Phaser.Scene {
 
   constructor() {
     super(SceneKeys.GameScene);
-  }
-
-  preload() {
-    this.load.audio(SPAWN_SOUND, [
-      'assets/sounds/Rise01.ogg',
-      'assets/sounds/Rise01.m4a',
-    ]);
-    this.load.audio(PICKUP_KEY, [
-      'assets/sounds/Rise02.ogg',
-      'assets/sounds/Rise02.m4a',
-    ]);
   }
 
   create() {
@@ -84,7 +72,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   collectStar(player, star) {
-    this.sound.play(PICKUP_KEY);
+    this.sound.play(AudioKeys.PICKUP);
     star.destroy();
     // todo: star.disableBody(true, true);
 

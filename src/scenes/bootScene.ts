@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import * as AudioKeys from '../audioKeys';
 import * as SceneKeys from './sceneKeys';
 import * as SpriteKeys from '../spriteKeys';
 
@@ -11,6 +12,16 @@ export default class BootScene extends Phaser.Scene {
     this.load.image(SpriteKeys.LAND, 'assets/land.png');
     this.load.image(SpriteKeys.PLAYER, 'assets/player.png');
     this.load.image(SpriteKeys.STAR, 'assets/star.png');
+
+    this.load.audio(AudioKeys.PICKUP, [
+      'assets/sounds/Rise02.ogg',
+      'assets/sounds/Rise02.m4a',
+    ]);
+
+    this.load.audio(AudioKeys.SPAWN, [
+      'assets/sounds/Rise01.ogg',
+      'assets/sounds/Rise01.m4a',
+    ]);
   }
 
   create() {

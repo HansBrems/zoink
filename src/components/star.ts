@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
-
-export const SPAWN_SOUND = 'spawn-sound';
+import * as AudioKeys from '../audioKeys';
 
 export default class Star {
   key: string;
@@ -40,7 +39,7 @@ export default class Star {
       alpha: 1,
       duration: 200,
       onComplete: () => {
-        this.scene.sound.play(SPAWN_SOUND);
+        this.scene.sound.play(AudioKeys.SPAWN);
       },
     });
 

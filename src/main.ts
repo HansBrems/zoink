@@ -5,8 +5,8 @@ import InventoryScene from './scenes/inventoryScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: 640,
+  height: 320,
   physics: {
     default: 'arcade',
     arcade: {
@@ -14,6 +14,9 @@ const config: Phaser.Types.Core.GameConfig = {
     },
   },
   scene: [BootScene, GameScene, InventoryScene],
+  scale: {
+    zoom: 2,
+  },
 };
 
 export default new Phaser.Game(config);

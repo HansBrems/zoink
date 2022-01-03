@@ -2,8 +2,10 @@ import Phaser from 'phaser';
 import Player from '../components/player';
 import Star from '../components/star';
 import * as AudioKeys from '../constants/audioKeys';
+import * as MapKeys from '../constants/mapKeys';
 import * as SceneKeys from '../constants/sceneKeys';
 import * as SpriteKeys from '../constants/spriteKeys';
+import * as TileKeys from '../constants/tileKeys';
 
 const SPAWN_INTERVAL = 10000;
 
@@ -23,37 +25,40 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.stop(SceneKeys.BootScene);
+    this.createMap();
 
     this.cashLabel = this.add.text(600, 16, `Cash: ${this.cash}`);
     this.cursorKeys = this.input.keyboard.createCursorKeys();
-    this.floor = this.createFloor();
     this.player = new Player(this, SpriteKeys.PLAYER);
 
     //this.toggleInventory();
     this.input.keyboard.on('keydown-I', _ => this.toggleInventory());
   }
 
-  createFloor() {
-    return this.add.group({
-      classType: Phaser.GameObjects.Image,
-      // @ts-ignore
-      key: SpriteKeys.LAND,
-      quantity: 16,
-      gridAlign: {
-        width: 4,
-        height: 4,
-        cellWidth: 32,
-        cellHeight: 32,
-        x: 16,
-        y: 16,
-      },
-    });
+  update() {
+    // Turn off for now
+    // this.spawnStar();
+    this.player.updatePosition(this.cursorKeys);
   }
 
-  update() {
-    this.spawnStar();
-    this.player.updatePosition(this.cursorKeys);
+  createMap() {
+    const map = this.make.tilemap({ key: MapKeys.MAP01 });
+    const tileset = map.addTilesetImage('dungeon', TileKeys.DUNGEON);
+
+    map.createLayer('Floor', tileset);
+    const wallsLayer = map.createLayer('Walls', tileset);
+    map.createLayer('Objects', tileset);
+
+    wallsLayer.setCollisionByProperty({ collides: true });
+  }
+
+  collectStar(player, star) {
+    this.sound.play(AudioKeys.PICKUP);
+    star.destroy();
+    // todo: star.disableBody(true, true);
+
+    this.cash += 10;
+    this.cashLabel.setText(`Cash: ${this.cash}`);
   }
 
   spawnStar() {
@@ -69,15 +74,6 @@ export default class GameScene extends Phaser.Scene {
       const star = new Star(this, SpriteKeys.STAR);
       star.addOverlap(this.player.gameObject, this.collectStar);
     }
-  }
-
-  collectStar(player, star) {
-    this.sound.play(AudioKeys.PICKUP);
-    star.destroy();
-    // todo: star.disableBody(true, true);
-
-    this.cash += 10;
-    this.cashLabel.setText(`Cash: ${this.cash}`);
   }
 
   toggleInventory() {

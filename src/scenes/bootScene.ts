@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import * as AudioKeys from '../constants/audioKeys';
+import * as MapKeys from '../constants/mapKeys';
 import * as SceneKeys from '../constants/sceneKeys';
 import * as SpriteKeys from '../constants/spriteKeys';
+import * as TileKeys from '../constants/tileKeys';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -9,10 +11,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image(SpriteKeys.LAND, 'assets/land.png');
-    this.load.image(SpriteKeys.PLAYER, 'assets/player.png');
-    this.load.image(SpriteKeys.STAR, 'assets/star.png');
-
+    // Audio
     this.load.audio(AudioKeys.PICKUP, [
       'assets/sounds/Rise02.ogg',
       'assets/sounds/Rise02.m4a',
@@ -22,6 +21,17 @@ export default class BootScene extends Phaser.Scene {
       'assets/sounds/Rise01.ogg',
       'assets/sounds/Rise01.m4a',
     ]);
+
+    // Sprites
+    this.load.image(SpriteKeys.LAND, 'assets/land.png');
+    this.load.image(SpriteKeys.PLAYER, 'assets/player.png');
+    this.load.image(SpriteKeys.STAR, 'assets/star.png');
+
+    // Tiles
+    this.load.image(TileKeys.DUNGEON, 'tiles/dungeon_tiles.png');
+
+    // Maps
+    this.load.tilemapTiledJSON(MapKeys.MAP01, 'tiles/dungeon-01.json');
   }
 
   create() {
@@ -30,7 +40,7 @@ export default class BootScene extends Phaser.Scene {
     this.time.delayedCall(
       3000,
       () => {
-        this.scene.run(SceneKeys.GameScene);
+        this.scene.start(SceneKeys.GameScene);
       },
       undefined,
       this,

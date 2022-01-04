@@ -30,17 +30,16 @@ export default class GameScene extends Phaser.Scene {
 
     const map = this.make.tilemap({ key: MapKeys.MAP01 });
     const tileset = map.addTilesetImage('dungeon', TileKeys.DUNGEON);
-
     map.createLayer('Floor', tileset);
-    this.player = new Player(this, SpriteKeys.PLAYER);
-    const wallsLayer = map.createLayer('Walls', tileset);
+    map.createLayer('FloorObjects', tileset);
     map.createLayer('Objects', tileset);
 
-    wallsLayer.setCollisionByProperty({ collides: true });
-
-    this.physics.add.collider(this.player.gameObject, wallsLayer);
-
+    this.player = new Player(this, SpriteKeys.PLAYER);
     this.cameras.main.startFollow(this.player.gameObject, true);
+
+    const wallsLayer = map.createLayer('Walls', tileset);
+    wallsLayer.setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.player.gameObject, wallsLayer);
 
     //this.toggleInventory();
     this.input.keyboard.on('keydown-I', _ => this.toggleInventory());

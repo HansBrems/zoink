@@ -25,11 +25,22 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.createMap();
-
     this.cashLabel = this.add.text(600, 16, `Cash: ${this.cash}`);
     this.cursorKeys = this.input.keyboard.createCursorKeys();
+
+    const map = this.make.tilemap({ key: MapKeys.MAP01 });
+    const tileset = map.addTilesetImage('dungeon', TileKeys.DUNGEON);
+
+    map.createLayer('Floor', tileset);
     this.player = new Player(this, SpriteKeys.PLAYER);
+    const wallsLayer = map.createLayer('Walls', tileset);
+    map.createLayer('Objects', tileset);
+
+    wallsLayer.setCollisionByProperty({ collides: true });
+
+    this.physics.add.collider(this.player.gameObject, wallsLayer);
+
+    this.cameras.main.startFollow(this.player.gameObject, true);
 
     //this.toggleInventory();
     this.input.keyboard.on('keydown-I', _ => this.toggleInventory());
@@ -41,16 +52,7 @@ export default class GameScene extends Phaser.Scene {
     this.player.updatePosition(this.cursorKeys);
   }
 
-  createMap() {
-    const map = this.make.tilemap({ key: MapKeys.MAP01 });
-    const tileset = map.addTilesetImage('dungeon', TileKeys.DUNGEON);
-
-    map.createLayer('Floor', tileset);
-    const wallsLayer = map.createLayer('Walls', tileset);
-    map.createLayer('Objects', tileset);
-
-    wallsLayer.setCollisionByProperty({ collides: true });
-  }
+  createMap() {}
 
   collectStar(player, star) {
     this.sound.play(AudioKeys.PICKUP);

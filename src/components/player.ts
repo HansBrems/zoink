@@ -54,7 +54,7 @@ export default class Player {
       this.key,
       'walk-down/walk-down-3.png',
     );
-    player.body.setSize(player.width * 0.5, player.height * 0.8);
+    player.body.setSize(player.width * 0.5, player.height * 0.5);
 
     this.scene.anims.create({
       key: 'player-idle-right',

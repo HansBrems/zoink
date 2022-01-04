@@ -33,6 +33,7 @@ export default class GameScene extends Phaser.Scene {
     map.createLayer('Floor', tileset);
     map.createLayer('FloorObjects', tileset);
     const objectsLayer = map.createLayer('Objects', tileset);
+    objectsLayer.setCollisionByProperty({ collides: true });
 
     this.player = new Player(this, SpriteKeys.PLAYER);
     this.cameras.main.startFollow(this.player.gameObject, true);

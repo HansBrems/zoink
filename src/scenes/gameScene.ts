@@ -32,7 +32,7 @@ export default class GameScene extends Phaser.Scene {
     const tileset = map.addTilesetImage('dungeon', TileKeys.DUNGEON);
     map.createLayer('Floor', tileset);
     map.createLayer('FloorObjects', tileset);
-    map.createLayer('Objects', tileset);
+    const objectsLayer = map.createLayer('Objects', tileset);
 
     this.player = new Player(this, SpriteKeys.PLAYER);
     this.cameras.main.startFollow(this.player.gameObject, true);
@@ -40,6 +40,7 @@ export default class GameScene extends Phaser.Scene {
     const wallsLayer = map.createLayer('Walls', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.player.gameObject, wallsLayer);
+    this.physics.add.collider(this.player.gameObject, objectsLayer);
 
     //this.toggleInventory();
     this.input.keyboard.on('keydown-I', _ => this.toggleInventory());

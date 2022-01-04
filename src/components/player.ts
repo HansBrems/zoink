@@ -49,26 +49,26 @@ export default class Player {
 
   private createPlayer(): Phaser.Physics.Arcade.Sprite {
     const player = this.scene.physics.add.sprite(
-      20,
-      20,
+      90,
+      60,
       this.key,
-      'walk-down/walk-down-1.png',
+      'walk-down/walk-down-3.png',
     );
     player.body.setSize(player.width * 0.5, player.height * 0.8);
 
     this.scene.anims.create({
       key: 'player-idle-right',
-      frames: [{ key: this.key, frame: 'walk-side/walk-side-1.png' }],
+      frames: [{ key: this.key, frame: 'walk-side/walk-side-3.png' }],
     });
 
     this.scene.anims.create({
       key: 'player-idle-down',
-      frames: [{ key: this.key, frame: 'walk-down/walk-down-1.png' }],
+      frames: [{ key: this.key, frame: 'walk-down/walk-down-3.png' }],
     });
 
     this.scene.anims.create({
       key: 'player-idle-up',
-      frames: [{ key: this.key, frame: 'walk-up/walk-up-1.png' }],
+      frames: [{ key: this.key, frame: 'walk-up/walk-up-3.png' }],
     });
 
     this.scene.anims.create({

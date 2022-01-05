@@ -33,13 +33,7 @@ export default class Player {
       this.player.setVelocity(0, PLAYER_SPEED);
       this.player.anims.play('player-walk-down', true);
     } else {
-      const currentAnim = this.player.anims.currentAnim;
-      if (currentAnim) {
-        const parts = this.player.anims.currentAnim.key.split('-');
-        parts[1] = 'idle';
-        this.player.anims.play(parts.join('-'), true);
-      }
-
+      this.playIdleAnim();
       this.player.setVelocity(0, 0);
     }
   }
@@ -107,5 +101,15 @@ export default class Player {
     // @ts-ignore
     player.body.setCollideWorldBounds(true);
     return player;
+  }
+
+  private playIdleAnim() {
+    const key = this.player.anims.currentAnim?.key;
+    if (key) {
+      const parts = key.split('-');
+      parts[1] = 'idle';
+      const newKey = parts.join('-');
+      this.player.anims.play(newKey, true);
+    }
   }
 }

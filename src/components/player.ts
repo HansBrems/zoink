@@ -33,14 +33,11 @@ export default class Player {
       this.player.setVelocity(0, PLAYER_SPEED);
       this.player.anims.play('player-walk-down', true);
     } else {
-      if (this.player.body.velocity.y < 0) {
-        this.player.anims.play('player-idle-up', true);
-      } else if (this.player.body.velocity.y > 0) {
-        this.player.anims.play('player-idle-down', true);
-      } else if (this.player.body.velocity.x > 0) {
-        this.player.anims.play('player-idle-right', true);
-      } else if (this.player.body.velocity.x < 0) {
-        this.player.anims.play('player-idle-right', true);
+      const currentAnim = this.player.anims.currentAnim;
+      if (currentAnim) {
+        const parts = this.player.anims.currentAnim.key.split('-');
+        parts[1] = 'idle';
+        this.player.anims.play(parts.join('-'), true);
       }
 
       this.player.setVelocity(0, 0);

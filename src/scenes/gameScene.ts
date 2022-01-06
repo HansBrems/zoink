@@ -43,13 +43,10 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.player.gameObject, wallsLayer);
     this.physics.add.collider(this.player.gameObject, objectsLayer);
 
-    //this.toggleInventory();
     this.input.keyboard.on('keydown-I', _ => this.toggleInventory());
   }
 
   update() {
-    // Turn off for now
-    // this.spawnStar();
     this.player.updatePosition(this.cursorKeys);
   }
 
@@ -58,7 +55,6 @@ export default class GameScene extends Phaser.Scene {
   collectStar(player, star) {
     this.sound.play(AudioKeys.PICKUP);
     star.destroy();
-    // todo: star.disableBody(true, true);
 
     this.cash += 10;
     this.cashLabel.setText(`Cash: ${this.cash}`);
@@ -86,7 +82,6 @@ export default class GameScene extends Phaser.Scene {
       this.scene.run(SceneKeys.InventoryScene);
     } else {
       this.scene.setVisible(false, SceneKeys.InventoryScene);
-      // or: this.scene.sleep(SceneKeys.InventoryScene);
     }
   }
 }

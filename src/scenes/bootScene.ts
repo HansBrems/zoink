@@ -42,7 +42,7 @@ export default class BootScene extends Phaser.Scene {
     this.add.text(350, 250, 'Loading');
 
     this.time.delayedCall(
-      3000,
+      500,
       () => {
         this.scene.start(SceneKeys.GameScene);
       },

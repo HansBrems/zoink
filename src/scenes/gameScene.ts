@@ -4,6 +4,7 @@ import * as MapKeys from '../constants/mapKeys';
 import * as SceneKeys from '../constants/sceneKeys';
 import * as SpriteKeys from '../constants/spriteKeys';
 import * as TileKeys from '../constants/tileKeys';
+import { debugDraw } from '../utils/debug';
 
 export default class GameScene extends Phaser.Scene {
   cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -28,6 +29,9 @@ export default class GameScene extends Phaser.Scene {
 
     const wallsLayer = map.createLayer('Walls', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });
+
+    debugDraw(wallsLayer, this);
+
     this.physics.add.collider(this.player.gameObject, wallsLayer);
     this.physics.add.collider(this.player.gameObject, objectsLayer);
   }

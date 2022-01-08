@@ -24,7 +24,7 @@ export default class BootScene extends Phaser.Scene {
 
     // Sprites
     this.load.atlas(
-      'characters',
+      SpriteKeys.CHARACTERS,
       'characters/characters.png',
       'characters/characters.json',
     );

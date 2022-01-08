@@ -1,12 +1,14 @@
 import Phaser from 'phaser';
+import { Mrpas } from 'mrpas';
+import { createNpcAnims } from '../anims/npcAnims';
 import Player from '../components/player';
-import Npc from '../components/npc';
+import Imp from '../components/imp';
+import * as NpcNames from '../constants/npcNames';
 import * as MapKeys from '../constants/mapKeys';
 import * as SceneKeys from '../constants/sceneKeys';
 import * as SpriteKeys from '../constants/spriteKeys';
 import * as TileKeys from '../constants/tileKeys';
 import { debugDraw } from '../utils/debug';
-import { Mrpas } from 'mrpas';
 
 export default class GameScene extends Phaser.Scene {
   cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -20,6 +22,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    createNpcAnims(this.anims, NpcNames.IMP);
+
     this.cursorKeys = this.input.keyboard.createCursorKeys();
 
     this.map = this.make.tilemap({ key: MapKeys.MAP01 });
@@ -29,16 +33,11 @@ export default class GameScene extends Phaser.Scene {
     const objectsLayer = this.map.createLayer('Objects', tileset);
     objectsLayer.setCollisionByProperty({ collides: true });
 
+    var imps = this.physics.add.group({ classType: Imp });
+    imps.get(50, 50, SpriteKeys.CHARACTERS);
+
     this.player = new Player(this, SpriteKeys.PLAYER);
     this.cameras.main.startFollow(this.player.gameObject, true);
-
-    new Npc(this, SpriteKeys.CHORT, 50, 50);
-    new Npc(this, SpriteKeys.IMP, 50, 75);
-    new Npc(this, SpriteKeys.LIZARD, 50, 100);
-    new Npc(this, SpriteKeys.MUDDY, 100, 50);
-    new Npc(this, SpriteKeys.SWAMPY, 100, 75);
-    new Npc(this, SpriteKeys.DEMON, 150, 50);
-    new Npc(this, SpriteKeys.ZOMBIE, 150, 100);
 
     const wallsLayer = this.map.createLayer('Walls', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });

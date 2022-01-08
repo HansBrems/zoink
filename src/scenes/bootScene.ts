@@ -23,13 +23,16 @@ export default class BootScene extends Phaser.Scene {
     ]);
 
     // Sprites
-    this.load.image(SpriteKeys.LAND, 'assets/land.png');
+    this.load.atlas(
+      'characters',
+      'characters/characters.png',
+      'characters/characters.json',
+    );
     this.load.atlas(
       SpriteKeys.PLAYER,
       'character/faune.png',
       'character/faune.json',
     );
-    this.load.image(SpriteKeys.STAR, 'assets/star.png');
 
     // Tiles
     this.load.image(TileKeys.DUNGEON, 'tiles/dungeon_tiles.png');

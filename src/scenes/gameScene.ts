@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../components/player';
+import Npc from '../components/npc';
 import * as MapKeys from '../constants/mapKeys';
 import * as SceneKeys from '../constants/sceneKeys';
 import * as SpriteKeys from '../constants/spriteKeys';
@@ -26,6 +27,14 @@ export default class GameScene extends Phaser.Scene {
 
     this.player = new Player(this, SpriteKeys.PLAYER);
     this.cameras.main.startFollow(this.player.gameObject, true);
+
+    new Npc(this, SpriteKeys.CHORT, 50, 50);
+    new Npc(this, SpriteKeys.IMP, 50, 75);
+    new Npc(this, SpriteKeys.LIZARD, 50, 100);
+    new Npc(this, SpriteKeys.MUDDY, 100, 50);
+    new Npc(this, SpriteKeys.SWAMPY, 100, 75);
+    new Npc(this, SpriteKeys.DEMON, 150, 50);
+    new Npc(this, SpriteKeys.ZOMBIE, 150, 100);
 
     const wallsLayer = map.createLayer('Walls', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });

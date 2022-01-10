@@ -99,7 +99,7 @@ export default class Player {
     });
 
     // @ts-ignore
-    player.body.setCollideWorldBounds(true);
+    player.body.setCollideWorldBounds(false);
     return player;
   }
 

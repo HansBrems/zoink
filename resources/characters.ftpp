@@ -32,7 +32,7 @@
     "powerOfTwo": false,
     "padding": 0,
     "extrude": 0,
-    "allowRotation": true,
+    "allowRotation": false,
     "allowTrim": true,
     "trimMode": "trim",
     "alphaThreshold": "0",

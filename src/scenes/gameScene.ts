@@ -33,7 +33,15 @@ export default class GameScene extends Phaser.Scene {
     const objectsLayer = this.map.createLayer('Objects', tileset);
     objectsLayer.setCollisionByProperty({ collides: true });
 
-    var imps = this.physics.add.group({ classType: Imp });
+    var imps = this.physics.add.group({
+      classType: Imp,
+      createCallback: go => {
+        (go as Imp).body.onCollide = true;
+      },
+    });
+    imps.get(50, 50, SpriteKeys.CHARACTERS);
+    imps.get(50, 50, SpriteKeys.CHARACTERS);
+    imps.get(50, 50, SpriteKeys.CHARACTERS);
     imps.get(50, 50, SpriteKeys.CHARACTERS);
 
     this.player = new Player(this, SpriteKeys.PLAYER);
@@ -51,6 +59,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.physics.add.collider(this.player.gameObject, wallsLayer);
     this.physics.add.collider(this.player.gameObject, objectsLayer);
+    this.physics.add.collider(imps, wallsLayer);
   }
 
   update() {

@@ -55,7 +55,8 @@ export default class GameScene extends Phaser.Scene {
       return tile && !tile.collides;
     });
 
-    //debugDraw(wallsLayer, this);
+    debugDraw(wallsLayer, this, new Phaser.Display.Color(2, 216, 244));
+    debugDraw(objectsLayer, this, new Phaser.Display.Color(2, 244, 151));
 
     this.physics.add.collider(this.player.gameObject, wallsLayer);
     this.physics.add.collider(this.player.gameObject, objectsLayer);

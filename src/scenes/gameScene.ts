@@ -3,11 +3,13 @@ import { Mrpas } from 'mrpas';
 import { createNpcAnims } from '../anims/npcAnims';
 import Player from '../components/player';
 import Imp from '../components/imp';
+import { uiEvents } from '../utils/eventsCenter';
 import * as NpcNames from '../constants/npcNames';
 import * as MapKeys from '../constants/mapKeys';
 import * as SceneKeys from '../constants/sceneKeys';
 import * as SpriteKeys from '../constants/spriteKeys';
 import * as TileKeys from '../constants/tileKeys';
+import DebugLog from '../models/debugLog';
 import { debugDraw } from '../utils/debug';
 
 export default class GameScene extends Phaser.Scene {
@@ -17,11 +19,17 @@ export default class GameScene extends Phaser.Scene {
   map: Phaser.Tilemaps.Tilemap;
   player: Player;
 
+  // Debugging
+  logInterval: number = 250;
+  lastLogTime: number = 0;
+
   constructor() {
     super(SceneKeys.GameScene);
   }
 
   create() {
+    this.scene.run(SceneKeys.GameUIScene);
+
     createNpcAnims(this.anims, NpcNames.IMP);
 
     this.cursorKeys = this.input.keyboard.createCursorKeys();
@@ -63,9 +71,10 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(imps, wallsLayer);
   }
 
-  update() {
+  update(time: number, delta: number) {
     this.player.updatePosition(this.cursorKeys);
     this.computeFov();
+    this.raiseDebugEvent(time);
   }
 
   private computeFov() {
@@ -124,5 +133,22 @@ export default class GameScene extends Phaser.Scene {
         tile.alpha = alpha;
       },
     );
+  }
+
+  private raiseDebugEvent(time: number) {
+    if (time - this.lastLogTime < this.logInterval) return;
+
+    const camera = this.cameras.main;
+    const log: DebugLog = {
+      cameraX: camera.worldView.x,
+      cameraY: camera.worldView.y,
+      playerX: this.player.gameObject.x,
+      playerY: this.player.gameObject.y,
+      worldHeight: camera.worldView.height,
+      worldWidth: camera.worldView.width,
+    };
+    uiEvents.emit('camera-debug', log);
+
+    this.lastLogTime = time;
   }
 }

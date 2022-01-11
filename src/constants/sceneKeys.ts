@@ -1,5 +1,5 @@
 const BootScene = 'boot-scene';
 const GameScene = 'game-scene';
-const InventoryScene = 'inventory-scene';
+const GameUIScene = 'game-ui-scene';
 
-export { BootScene, GameScene, InventoryScene };
+export { BootScene, GameScene, GameUIScene };

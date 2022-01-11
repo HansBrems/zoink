@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import BootScene from './scenes/bootScene';
 import GameScene from './scenes/gameScene';
+import GameUIScene from './scenes/gameUIScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -13,7 +14,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [BootScene, GameScene],
+  scene: [BootScene, GameScene, GameUIScene],
   scale: {
     zoom: 2,
   },

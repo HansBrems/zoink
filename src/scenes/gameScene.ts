@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import { Mrpas } from 'mrpas';
 import { createNpcAnims } from '../anims/npcAnims';
+import { uiEvents } from '../utils/eventsCenter';
 import Player from '../components/player';
 import Imp from '../components/imp';
-import { uiEvents } from '../utils/eventsCenter';
 import * as NpcNames from '../constants/npcNames';
 import * as MapKeys from '../constants/mapKeys';
 import * as SceneKeys from '../constants/sceneKeys';
@@ -28,12 +28,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.run(SceneKeys.GameUIScene);
-
     createNpcAnims(this.anims, NpcNames.IMP);
 
     this.cursorKeys = this.input.keyboard.createCursorKeys();
+    this.scene.run(SceneKeys.GameUIScene);
 
+    // Map
     this.map = this.make.tilemap({ key: MapKeys.MAP01 });
     const tileset = this.map.addTilesetImage('dungeon', TileKeys.DUNGEON);
     this.floorLayer = this.map.createLayer('Floor', tileset);
@@ -41,34 +41,28 @@ export default class GameScene extends Phaser.Scene {
     const objectsLayer = this.map.createLayer('Objects', tileset);
     objectsLayer.setCollisionByProperty({ collides: true });
 
-    var imps = this.physics.add.group({
-      classType: Imp,
-      createCallback: go => {
-        (go as Imp).body.onCollide = true;
-      },
-    });
-    imps.get(50, 50, SpriteKeys.CHARACTERS);
-    imps.get(50, 50, SpriteKeys.CHARACTERS);
-    imps.get(50, 50, SpriteKeys.CHARACTERS);
-    imps.get(50, 50, SpriteKeys.CHARACTERS);
+    // Fov
+    this.fov = this.createFov();
 
+    // Npcs
+    const npcs = this.spawnNpcs();
+
+    const wallsLayer = this.map.createLayer('Walls', tileset);
+
+    // Player
     this.player = new Player(this, SpriteKeys.PLAYER);
     this.cameras.main.startFollow(this.player.gameObject, true);
 
-    const wallsLayer = this.map.createLayer('Walls', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });
 
-    this.fov = new Mrpas(this.map.width, this.map.height, (x, y) => {
-      const tile = this.floorLayer.getTileAt(x, y);
-      return tile && !tile.collides;
-    });
-
-    debugDraw(wallsLayer, this, new Phaser.Display.Color(2, 216, 244));
-    debugDraw(objectsLayer, this, new Phaser.Display.Color(2, 244, 151));
-
+    // Collisions
     this.physics.add.collider(this.player.gameObject, wallsLayer);
     this.physics.add.collider(this.player.gameObject, objectsLayer);
-    this.physics.add.collider(imps, wallsLayer);
+    this.physics.add.collider(npcs, wallsLayer);
+
+    // Debug
+    debugDraw(wallsLayer, this, new Phaser.Display.Color(2, 216, 244));
+    debugDraw(objectsLayer, this, new Phaser.Display.Color(2, 244, 151));
   }
 
   update(time: number, delta: number) {
@@ -135,6 +129,13 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
+  private createFov(): Mrpas {
+    return new Mrpas(this.map.width, this.map.height, (x, y) => {
+      const tile = this.floorLayer.getTileAt(x, y);
+      return tile && !tile.collides;
+    });
+  }
+
   private raiseDebugEvent(time: number) {
     if (time - this.lastLogTime < this.logInterval) return;
 
@@ -150,5 +151,20 @@ export default class GameScene extends Phaser.Scene {
     uiEvents.emit('camera-debug', log);
 
     this.lastLogTime = time;
+  }
+
+  private spawnNpcs(): Phaser.Physics.Arcade.Group {
+    const npcs = this.physics.add.group({
+      classType: Imp,
+      createCallback: go => {
+        (go as Imp).body.onCollide = true;
+      },
+    });
+
+    for (let i = 0; i < 50; i++) {
+      npcs.get(50, 50, SpriteKeys.CHARACTERS);
+    }
+
+    return npcs;
   }
 }

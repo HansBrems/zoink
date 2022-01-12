@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { Mrpas } from 'mrpas';
 import { createNpcAnims } from '../anims/npcAnims';
+import { createPlayerAnims } from '../anims/playerAnims';
 import { uiEvents } from '../utils/eventsCenter';
 import Player from '../components/player';
 import Imp from '../components/imp';
@@ -29,6 +30,7 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     createNpcAnims(this.anims, NpcNames.IMP);
+    createPlayerAnims(this.anims);
 
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.scene.run(SceneKeys.GameUIScene);
@@ -36,8 +38,14 @@ export default class GameScene extends Phaser.Scene {
     // Map
     this.map = this.make.tilemap({ key: MapKeys.MAP01 });
     const tileset = this.map.addTilesetImage('dungeon', TileKeys.DUNGEON);
+
+    // Floor
     this.floorLayer = this.map.createLayer('Floor', tileset);
+
+    // Floor Objects
     this.map.createLayer('FloorObjects', tileset);
+
+    // Objects
     const objectsLayer = this.map.createLayer('Objects', tileset);
     objectsLayer.setCollisionByProperty({ collides: true });
 
@@ -47,17 +55,17 @@ export default class GameScene extends Phaser.Scene {
     // Npcs
     const npcs = this.spawnNpcs();
 
-    const wallsLayer = this.map.createLayer('Walls', tileset);
-
     // Player
-    this.player = new Player(this, SpriteKeys.PLAYER);
-    this.cameras.main.startFollow(this.player.gameObject, true);
+    this.player = new Player(this, 90, 60, SpriteKeys.PLAYER);
+    this.cameras.main.startFollow(this.player, true);
 
+    // Walls
+    const wallsLayer = this.map.createLayer('Walls', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });
 
     // Collisions
-    this.physics.add.collider(this.player.gameObject, wallsLayer);
-    this.physics.add.collider(this.player.gameObject, objectsLayer);
+    this.physics.add.collider(this.player, wallsLayer);
+    this.physics.add.collider(this.player, objectsLayer);
     this.physics.add.collider(npcs, wallsLayer);
 
     // Debug
@@ -101,8 +109,8 @@ export default class GameScene extends Phaser.Scene {
       }
     }
 
-    const px = this.map.worldToTileX(this.player.gameObject.x);
-    const py = this.map.worldToTileY(this.player.gameObject.y);
+    const px = this.map.worldToTileX(this.player.x);
+    const py = this.map.worldToTileY(this.player.y);
 
     this.fov.compute(
       px,
@@ -143,8 +151,8 @@ export default class GameScene extends Phaser.Scene {
     const log: DebugLog = {
       cameraX: camera.worldView.x,
       cameraY: camera.worldView.y,
-      playerX: this.player.gameObject.x,
-      playerY: this.player.gameObject.y,
+      playerX: this.player.x,
+      playerY: this.player.y,
       worldHeight: camera.worldView.height,
       worldWidth: camera.worldView.width,
     };

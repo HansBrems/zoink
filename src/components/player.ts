@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { PlayerKeys } from '~/models/playerKeys';
 
 const PLAYER_SPEED = 80;
 
@@ -19,19 +20,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.playIdleAnim();
   }
 
-  public updatePosition(cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys) {
-    if (cursorKeys.left.isDown) {
+  public updatePosition(playerKeys: PlayerKeys) {
+    if (playerKeys.a.isDown) {
       this.setVelocity(-PLAYER_SPEED, 0);
       this.anims.play('player-walk-right', true);
       this.flipX = true;
-    } else if (cursorKeys.right.isDown) {
+    } else if (playerKeys.d.isDown) {
       this.setVelocity(PLAYER_SPEED, 0);
       this.anims.play('player-walk-right', true);
       this.flipX = false;
-    } else if (cursorKeys.up.isDown) {
+    } else if (playerKeys.w.isDown) {
       this.setVelocity(0, -PLAYER_SPEED);
       this.anims.play('player-walk-up', true);
-    } else if (cursorKeys.down.isDown) {
+    } else if (playerKeys.s.isDown) {
       this.setVelocity(0, PLAYER_SPEED);
       this.anims.play('player-walk-down', true);
     } else {

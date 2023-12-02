@@ -12,8 +12,10 @@ import * as SpriteKeys from '../constants/spriteKeys';
 import * as TileKeys from '../constants/tileKeys';
 import DebugLog from '../models/debugLog';
 import { debugDraw } from '../utils/debug';
+import { PlayerKeys } from '~/models/playerKeys';
 
 export default class GameScene extends Phaser.Scene {
+  keys: PlayerKeys;
   cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
   floorLayer: Phaser.Tilemaps.TilemapLayer;
   fov: Mrpas;
@@ -32,7 +34,14 @@ export default class GameScene extends Phaser.Scene {
     createNpcAnims(this.anims, NpcNames.IMP);
     createPlayerAnims(this.anims);
 
-    this.cursorKeys = this.input.keyboard.createCursorKeys();
+    this.keys = {
+      cursorKeys: this.input.keyboard.createCursorKeys(),
+      a: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+      s: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+      d: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+      w: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+    };
+
     this.scene.run(SceneKeys.GameUIScene);
 
     // Map
@@ -69,12 +78,12 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(npcs, wallsLayer);
 
     // Debug
-    debugDraw(wallsLayer, this, new Phaser.Display.Color(2, 216, 244));
-    debugDraw(objectsLayer, this, new Phaser.Display.Color(2, 244, 151));
+    // debugDraw(wallsLayer, this, new Phaser.Display.Color(2, 216, 244));
+    // debugDraw(objectsLayer, this, new Phaser.Display.Color(2, 244, 151));
   }
 
   update(time: number, delta: number) {
-    this.player.updatePosition(this.cursorKeys);
+    this.player.updatePosition(this.keys);
     this.computeFov();
     this.raiseDebugEvent(time);
   }
@@ -169,7 +178,7 @@ export default class GameScene extends Phaser.Scene {
       },
     });
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 5; i++) {
       npcs.get(50, 50, SpriteKeys.CHARACTERS);
     }
 

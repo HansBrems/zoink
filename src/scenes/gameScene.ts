@@ -1,18 +1,19 @@
-import Phaser from 'phaser';
 import { Mrpas } from 'mrpas';
-import { createNpcAnims } from '../anims/npcAnims';
-import { createPlayerAnims } from '../anims/playerAnims';
-import { uiEvents } from '../utils/eventsCenter';
-import Player from '../components/player';
-import Imp from '../components/imp';
-import * as NpcNames from '../constants/npcNames';
-import * as MapKeys from '../constants/mapKeys';
-import * as SceneKeys from '../constants/sceneKeys';
-import * as SpriteKeys from '../constants/spriteKeys';
-import * as TileKeys from '../constants/tileKeys';
-import DebugLog from '../models/debugLog';
-import { debugDraw } from '../utils/debug';
+import Phaser from 'phaser';
+
+import { createNpcAnims } from '~/anims/npcAnims';
+import { createPlayerAnims } from '~/anims/playerAnims';
+import Player from '~/components/player';
+import Imp from '~/components/imp';
+import * as NpcNames from '~/constants/npcNames';
+import * as MapKeys from '~/constants/mapKeys';
+import * as SceneKeys from '~/constants/sceneKeys';
+import * as SpriteKeys from '~/constants/spriteKeys';
+import * as TileKeys from '~/constants/tileKeys';
+import DebugLog from '~/models/debugLog';
 import { PlayerKeys } from '~/models/playerKeys';
+import { debugDraw } from '~/utils/debug';
+import { uiEvents } from '~/utils/eventsCenter';
 
 export default class GameScene extends Phaser.Scene {
   keys: PlayerKeys;

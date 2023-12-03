@@ -34,29 +34,22 @@ export default class GameScene extends Phaser.Scene {
   create() {
     createNpcAnims(this.anims, NpcNames.IMP);
     createPlayerAnims(this.anims);
-
-    this.keys = {
-      cursorKeys: this.input.keyboard.createCursorKeys(),
-      a: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-      s: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-      d: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-      w: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-    };
+    this.keys = this.createPlayerKeys(this.input.keyboard!);
 
     this.scene.run(SceneKeys.GameUIScene);
 
     // Map
-    this.map = this.make.tilemap({ key: MapKeys.MAP01 });
-    const tileset = this.map.addTilesetImage('dungeon', TileKeys.DUNGEON);
+    this.map = this.make.tilemap({ key: MapKeys.MAP01 })!;
+    const tileset = this.map.addTilesetImage('dungeon', TileKeys.DUNGEON)!;
 
     // Floor
-    this.floorLayer = this.map.createLayer('Floor', tileset);
+    this.floorLayer = this.map.createLayer('Floor', tileset)!;
 
     // Floor Objects
     this.map.createLayer('FloorObjects', tileset);
 
     // Objects
-    const objectsLayer = this.map.createLayer('Objects', tileset);
+    const objectsLayer = this.map.createLayer('Objects', tileset)!;
     objectsLayer.setCollisionByProperty({ collides: true });
 
     // Fov
@@ -70,7 +63,7 @@ export default class GameScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true);
 
     // Walls
-    const wallsLayer = this.map.createLayer('Walls', tileset);
+    const wallsLayer = this.map.createLayer('Walls', tileset)!;
     wallsLayer.setCollisionByProperty({ collides: true });
 
     // Collisions
@@ -96,10 +89,10 @@ export default class GameScene extends Phaser.Scene {
 
     const camera = this.cameras.main;
     const bounds = new Phaser.Geom.Rectangle(
-      this.map.worldToTileX(camera.worldView.x) - 1,
-      this.map.worldToTileY(camera.worldView.y) - 1,
-      this.map.worldToTileX(camera.worldView.width) + 2,
-      this.map.worldToTileX(camera.worldView.height) + 3,
+      this.map.worldToTileX(camera.worldView.x)! - 1,
+      this.map.worldToTileY(camera.worldView.y)! - 1,
+      this.map.worldToTileX(camera.worldView.width)! + 2,
+      this.map.worldToTileX(camera.worldView.height)! + 3,
     );
 
     // set all tiles within camera view to invisible
@@ -119,15 +112,15 @@ export default class GameScene extends Phaser.Scene {
       }
     }
 
-    const px = this.map.worldToTileX(this.player.x);
-    const py = this.map.worldToTileY(this.player.y);
+    const px = this.map.worldToTileX(this.player.x)!;
+    const py = this.map.worldToTileY(this.player.y)!;
 
     this.fov.compute(
       px,
       py,
       4,
       (x, y) => {
-        const tile = this.floorLayer.getTileAt(x, y);
+        const tile = this.floorLayer!.getTileAt(x, y);
         if (!tile) {
           return false;
         }
@@ -154,6 +147,18 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  private createPlayerKeys(
+    keyboard: Phaser.Input.Keyboard.KeyboardPlugin,
+  ): PlayerKeys {
+    return {
+      cursorKeys: keyboard!.createCursorKeys(),
+      a: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+      s: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+      d: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+      w: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+    };
+  }
+
   private raiseDebugEvent(time: number) {
     if (time - this.lastLogTime < this.logInterval) return;
 
@@ -175,7 +180,7 @@ export default class GameScene extends Phaser.Scene {
     const npcs = this.physics.add.group({
       classType: Imp,
       createCallback: go => {
-        (go as Imp).body.onCollide = true;
+        (go as Imp).body!.onCollide = true;
       },
     });
 

@@ -1,6 +1,5 @@
 import { Mrpas } from 'mrpas';
 import Phaser from 'phaser';
-
 import { createNpcAnims } from '~/anims/npcAnims';
 import { createPlayerAnims } from '~/anims/playerAnims';
 import Player from '~/components/player';
@@ -11,18 +10,23 @@ import * as SceneKeys from '~/constants/sceneKeys';
 import * as SpriteKeys from '~/constants/spriteKeys';
 import * as TileKeys from '~/constants/tileKeys';
 import DebugLog from '~/models/debugLog';
-import { PlayerKeys } from '~/models/playerKeys';
 import { debugDraw } from '~/utils/debug';
 import { uiEvents } from '~/utils/eventsCenter';
 import { createFov, computeFov } from '~/utils/fov';
 
 export default class GameScene extends Phaser.Scene {
-  keys: PlayerKeys;
-  cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
-  floorLayer: Phaser.Tilemaps.TilemapLayer;
-  fov: Mrpas;
-  map: Phaser.Tilemaps.Tilemap;
+  // Player
   player: Player;
+
+  // Map
+  map: Phaser.Tilemaps.Tilemap;
+  floorLayer: Phaser.Tilemaps.TilemapLayer;
+  floorObjectsLayer: Phaser.Tilemaps.TilemapLayer;
+  objectsLayer: Phaser.Tilemaps.TilemapLayer;
+  wallsLayer: Phaser.Tilemaps.TilemapLayer;
+
+  // Fov
+  fov: Mrpas;
 
   // Debugging
   logInterval: number = 250;
@@ -35,7 +39,6 @@ export default class GameScene extends Phaser.Scene {
   create() {
     createNpcAnims(this.anims, NpcNames.IMP);
     createPlayerAnims(this.anims);
-    this.keys = this.createPlayerKeys(this.input.keyboard!);
 
     this.scene.run(SceneKeys.GameUIScene);
 
@@ -45,40 +48,37 @@ export default class GameScene extends Phaser.Scene {
 
     // Floor
     this.floorLayer = this.map.createLayer('Floor', tileset)!;
-
-    // Floor Objects
     this.map.createLayer('FloorObjects', tileset);
 
-    // Objects
-    const objectsLayer = this.map.createLayer('Objects', tileset)!;
-    objectsLayer.setCollisionByProperty({ collides: true });
+    // Player
+    this.player = new Player(this, 90, 60, SpriteKeys.PLAYER);
 
-    // Fov
-    this.fov = createFov(this.map, this.floorLayer);
+    // Objects
+    this.objectsLayer = this.map.createLayer('Objects', tileset)!;
+    this.objectsLayer.setCollisionByProperty({ collides: true });
+
+    // Walls
+    this.wallsLayer = this.map.createLayer('Walls', tileset)!;
+    this.wallsLayer.setCollisionByProperty({ collides: true });
 
     // Npcs
     const npcs = this.spawnNpcs();
 
-    // Player
-    this.player = new Player(this, 90, 60, SpriteKeys.PLAYER);
-    this.cameras.main.startFollow(this.player, true);
-
-    // Walls
-    const wallsLayer = this.map.createLayer('Walls', tileset)!;
-    wallsLayer.setCollisionByProperty({ collides: true });
-
     // Collisions
-    this.physics.add.collider(this.player, wallsLayer);
-    this.physics.add.collider(this.player, objectsLayer);
-    this.physics.add.collider(npcs, wallsLayer);
+    this.physics.add.collider(this.player, this.wallsLayer);
+    this.physics.add.collider(this.player, this.objectsLayer);
+    this.physics.add.collider(npcs, this.wallsLayer);
+
+    // Fov
+    this.fov = createFov(this.map, this.floorLayer);
 
     // Debug
-    // debugDraw(wallsLayer, this, new Phaser.Display.Color(2, 216, 244));
-    // debugDraw(objectsLayer, this, new Phaser.Display.Color(2, 244, 151));
+    debugDraw(this.wallsLayer, this, new Phaser.Display.Color(2, 216, 244));
+    debugDraw(this.objectsLayer, this, new Phaser.Display.Color(2, 244, 151));
   }
 
   update(time: number, delta: number) {
-    this.player.updatePosition(this.keys);
+    this.player.updatePosition();
     computeFov(
       this.fov,
       this.map,
@@ -87,18 +87,6 @@ export default class GameScene extends Phaser.Scene {
       this.cameras.main,
     );
     this.raiseDebugEvent(time);
-  }
-
-  private createPlayerKeys(
-    keyboard: Phaser.Input.Keyboard.KeyboardPlugin,
-  ): PlayerKeys {
-    return {
-      cursorKeys: keyboard!.createCursorKeys(),
-      a: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-      s: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-      d: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-      w: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-    };
   }
 
   private raiseDebugEvent(time: number) {

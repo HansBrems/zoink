@@ -50,6 +50,9 @@ export default class GameScene extends Phaser.Scene {
     this.floorLayer = this.map.createLayer('Floor', tileset)!;
     this.map.createLayer('FloorObjects', tileset);
 
+    // Npcs
+    const npcs = this.spawnNpcs();
+
     // Player
     this.player = new Player(this, 90, 60, SpriteKeys.PLAYER);
 
@@ -61,13 +64,11 @@ export default class GameScene extends Phaser.Scene {
     this.wallsLayer = this.map.createLayer('Walls', tileset)!;
     this.wallsLayer.setCollisionByProperty({ collides: true });
 
-    // Npcs
-    const npcs = this.spawnNpcs();
-
     // Collisions
     this.physics.add.collider(this.player, this.wallsLayer);
     this.physics.add.collider(this.player, this.objectsLayer);
     this.physics.add.collider(npcs, this.wallsLayer);
+    this.physics.add.collider(npcs, this.objectsLayer);
 
     // Fov
     this.fov = createFov(this.map, this.floorLayer);
@@ -78,7 +79,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number) {
-    this.player.updatePosition();
+    this.player.update();
     computeFov(
       this.fov,
       this.map,

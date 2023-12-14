@@ -1,10 +1,11 @@
+import { Vector } from 'matter';
 import Phaser from 'phaser';
-import { PlayerKeys } from '~/models/playerKeys';
+import { KeyboardMappings } from '~/models/keyboard-mappings';
 
 const PLAYER_SPEED = 80;
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  playerKeys: PlayerKeys;
+  keys: KeyboardMappings;
 
   constructor(
     scene: Phaser.Scene,
@@ -18,24 +19,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.body!.setSize(this.width * 0.3, this.height * 0.5);
-    this.playerKeys = this.createPlayerKeys(scene.input.keyboard!);
-    this.playIdleAnim();
     scene.cameras.main.startFollow(this, true);
+    this.keys = this.createKeyboardMappings(scene.input.keyboard!);
+    this.playIdleAnim();
   }
 
-  public updatePosition() {
-    if (this.playerKeys.a.isDown) {
+  public update() {
+    if (this.keys.left.isDown) {
       this.setVelocity(-PLAYER_SPEED, 0);
       this.anims.play('player-walk-right', true);
       this.flipX = true;
-    } else if (this.playerKeys.d.isDown) {
+    } else if (this.keys.right.isDown) {
       this.setVelocity(PLAYER_SPEED, 0);
       this.anims.play('player-walk-right', true);
       this.flipX = false;
-    } else if (this.playerKeys.w.isDown) {
+    } else if (this.keys.up.isDown) {
       this.setVelocity(0, -PLAYER_SPEED);
       this.anims.play('player-walk-up', true);
-    } else if (this.playerKeys.s.isDown) {
+    } else if (this.keys.down.isDown) {
       this.setVelocity(0, PLAYER_SPEED);
       this.anims.play('player-walk-down', true);
     } else {
@@ -44,16 +45,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  private createPlayerKeys(
+  private createKeyboardMappings(
     keyboard: Phaser.Input.Keyboard.KeyboardPlugin,
-  ): PlayerKeys {
-    return {
-      cursorKeys: keyboard!.createCursorKeys(),
-      a: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-      s: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-      d: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-      w: keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-    };
+  ): KeyboardMappings {
+    return keyboard.addKeys({
+      down: Phaser.Input.Keyboard.KeyCodes.S,
+      left: Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D,
+      up: Phaser.Input.Keyboard.KeyCodes.W,
+    }) as KeyboardMappings;
   }
 
   private playIdleAnim() {
